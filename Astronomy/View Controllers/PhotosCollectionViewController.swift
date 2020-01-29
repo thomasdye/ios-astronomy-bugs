@@ -195,7 +195,9 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDataSour
     }
     private var photoReferences = [MarsPhotoReference]() {
         didSet {
-            DispatchQueue.main.async { self.collectionView?.reloadData() }
+            DispatchQueue.main.async {
+                self.collectionView?.reloadData()
+            }
         }
     }
     

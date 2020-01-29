@@ -15,8 +15,10 @@ class MarsRoverClient {
                         completion: @escaping (MarsRover?, Error?) -> Void) {
         
         let url = self.url(forInfoForRover: name)
-        fetch(from: url, using: session) { (dictionary: [String : MarsRover]?, error: Error?) in
-            guard let rover = dictionary?["photoManifest"] else {
+        fetch(from: url, using: session) { (possibleDictionary: [String : MarsRover]?, error: Error?) in
+            
+            guard let dictionary = possibleDictionary,
+                let rover = dictionary["photo_manifest"] else {
                 completion(nil, error)
                 return
             }
@@ -41,9 +43,9 @@ class MarsRoverClient {
     
     // MARK: - Private
     
-    private func fetch<T: Codable>(from url: URL,
+    private func fetch<CodableElement: Codable>(from url: URL,
                            using session: URLSession = URLSession.shared,
-                           completion: @escaping (T?, Error?) -> Void) {
+                           completion: @escaping (CodableElement?, Error?) -> Void) {
         session.dataTask(with: url) { (data, response, error) in
             if let error = error {
                 completion(nil, error)
@@ -57,7 +59,8 @@ class MarsRoverClient {
             
             do {
                 let jsonDecoder = MarsPhotoReference.jsonDecoder
-                let decodedObject = try jsonDecoder.decode(T.self, from: data)
+                // CodableElement is of type [String: MarsRover]
+                let decodedObject = try jsonDecoder.decode(CodableElement.self, from: data)
                 completion(decodedObject, nil)
             } catch {
                 completion(nil, error)

@@ -9,7 +9,10 @@
 import Foundation
 
 struct MarsRover: Codable {
+    
+    // Properties of the MarsRover class
     let name: String
+    
     
     let launchDate: Date
     let landingDate: Date
@@ -33,7 +36,7 @@ struct MarsRover: Codable {
         case status
         case maxSol
         case maxDate
-        case numberOfPhotos
+        case numberOfPhotos = "totalPhotos"
         case solDescriptions = "photos"
     }
     
